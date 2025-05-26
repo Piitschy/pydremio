@@ -120,6 +120,29 @@ polars_df = ds.run().to_polars()
 pandas_df = ds.run().to_pandas()
 ```
 
+#### Save a dataset
+
+After loading a dataset into a dataframe, it's possible to save it as file in various formats:
+
+- CSV
+- Parquet
+- JSON
+- Excel
+- ...
+
+```python 
+polars_df.write_csv("path/to/save.csv")
+polars_df.write_parquet("path/to/save.parquet")
+polars_df.write_json("path/to/save.json")
+polars_df.write_excel("path/to/save.xlsx")
+```
+
+With method chaining, you can also save the dataset directly:
+
+```python 
+dremio.get_dataset("path.to.vds").run_to_polars().write_csv("path/to/save.csv")
+```
+
 ### Create a folder
 
 ```python
