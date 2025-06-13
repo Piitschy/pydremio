@@ -36,11 +36,9 @@ jobs:
       uses: devops-infra/action-commit-push@master
       with:
         github_token: "${{ secrets.GITHUB_TOKEN }}"
-        add_timestamp: true
-        commit_prefix: "[AUTO]"
+        commit_prefix: "[AUTO] "
         commit_message: "Update version to ${{ env.VERSION }}"
         force: false
-        target_branch: "main"
 
     - name: Build distribution
       run: python -m build .
