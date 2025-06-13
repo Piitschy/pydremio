@@ -32,10 +32,21 @@ jobs:
     - name: Run make to update version
       run: make version=${{ env.VERSION }} update version
 
+    - name: Run the Action
+      uses: devops-infra/action-commit-push@master
+      with:
+        github_token: "${{ secrets.GITHUB_TOKEN }}"
+        add_timestamp: true
+        commit_prefix: "[AUTO]"
+        commit_message: "Update version to ${{ env.VERSION }}"
+        force: false
+        target_branch: "main"
+
     - name: Build distribution
       run: python -m build .
 
     - name: Upload release to GitHub
+      if: github.ref_name == 'main'
       uses: softprops/action-gh-release@v2
       with:
         draft: true
@@ -45,9 +56,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-
-
-
-
-
+    - name: Uplaod to PyPI
+      if: github.ref_name == 'main'
+      run: |
+        python -m pip install --upgrade twine
+        twine upload --repository testpypi dist/*
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
